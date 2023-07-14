@@ -1,12 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Box, Snackbar, Grid, Paper, TextField, Button, IconButton, Avatar, FormControl, InputLabel, Select, MenuItem, Typography, Checkbox } from '@mui/material';
 import { Container } from '@mui/material';
-import axios from 'axios';
 import { LocationContext } from '../../Contexts/LocationContext';
 import { Images } from '../Images/Images';
 import { ImagesContext } from '../../Contexts/ImagesContext';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { Dining } from '@mui/icons-material';
 import { ResetPassword } from '../../Authentication/ResetPassword';
 import { updateUser } from '../../apiService/apiService';
 
@@ -56,7 +54,7 @@ export const EditUserProfile = () => {
     telephone2: profile.telephone2,
     profileSummary: profile.profileSummary,
     realEstateLogo: profile.realEstateLogo,
-    userType: 'Agente',
+    userType: 'Agent',
     profilePicture: profile.profilePicture,
     subscription: profile.subscription,
   });
