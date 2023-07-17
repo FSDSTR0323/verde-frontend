@@ -32,7 +32,7 @@ export const EditUserProfile = () => {
     backgroundColor: '#2196f3', // Color de fondo de la notificación
     color: '#fff', // Color del texto de la notificación
   };
-  
+
 
   const handleCheckboxChange = (event) => {
     setSubscription(event.target.checked);
@@ -49,7 +49,7 @@ export const EditUserProfile = () => {
     mainOfficeProvince: profile.mainOfficeProvince,
     mainOfficeCountry: 'España',
     //TODO: email no se puede editar
-    //email: profile.email,
+    email: profile.email,
     telephone1: profile.telephone,
     telephone2: profile.telephone2,
     profileSummary: profile.profileSummary,
@@ -106,7 +106,7 @@ export const EditUserProfile = () => {
           <Avatar
             style={{ marginBottom: '2px', width: '80px', height: '80px' }}
             alt="User Avatar"
-            src={imageUrls[0]}
+            src={profile.profilePicture}
           />
         </div>
         {/* Upload button */}
@@ -175,10 +175,10 @@ export const EditUserProfile = () => {
                     <InputLabel id="communities-label">Comunidad Autónoma*</InputLabel>
                     <Select
                       labelId="communities-label"
-                      id="AgentRegistrationComunidadAutonoma"
-                      label="Comunidad Autónoma"
-                      name="AgentRegistrationComunity"
-                      value={formData.agentRegistrationCommunity}
+                      id="AgentRegistrationCommunity"
+                      label="Community"
+                      name="AgentRegistrationCommunity"
+                      value={formData.AgentRegistrationCommunity}
                       onChange={handleChange}
                     >
                       {communities.map((community) => (
@@ -301,8 +301,8 @@ export const EditUserProfile = () => {
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button color="primary" variant="outlined" onClick={handleResetPasswordOpen}>Cambiar contraseña</Button>
-              {open && <ResetPassword open={open} onClose={handleResetPasswordClose}/>}
+                <Button color="primary" variant="outlined" onClick={handleResetPasswordOpen}>Cambiar contraseña</Button>
+                {open && <ResetPassword open={open} onClose={handleResetPasswordClose} />}
               </div>
             </div>
           </Paper>
@@ -332,15 +332,15 @@ export const EditUserProfile = () => {
 
       {/*  </Box>*/}
       <Snackbar
-          open={openSnackbar}
-          autoHideDuration={6000} // Duración de la notificación en milisegundos (opcional)
-          onClose={() => setOpenSnackbar(false)} // Función para cerrar la notificación
-          message={snackbarMessage} // Mensaje de la notificación
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Localización de la notificación
-          key={'bottom' + 'center'} // Key necesaria para que funcione
-          style= {snackbarStyle} // Aplica el estilo personalizado al contenido de la notificación
-        />
+        open={openSnackbar}
+        autoHideDuration={6000} // Duración de la notificación en milisegundos (opcional)
+        onClose={() => setOpenSnackbar(false)} // Función para cerrar la notificación
+        message={snackbarMessage} // Mensaje de la notificación
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Localización de la notificación
+        key={'bottom' + 'center'} // Key necesaria para que funcione
+        style={snackbarStyle} // Aplica el estilo personalizado al contenido de la notificación
+      />
     </div >
-    
+
   )
 };
