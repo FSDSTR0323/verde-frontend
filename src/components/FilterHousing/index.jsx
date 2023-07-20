@@ -14,224 +14,12 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import HousingContext from './HousingContextFilter';
-import { LocationContext } from '../Contexts/LocationContext'
+import { LocationContext } from '../Contexts/LocationContext';
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 
 
-{/* 
+
 //Location
-
-export function LocationFilter() {
-
-  const { provinces } = useContext(LocationContext);
-  const [municipalities, setMunicipalities] = useState([]);
-  const [populations, setPopulations] = useState([]);
-  const [neighborhoods, setNeighborhoods] = useState([]);
-
-  const [selectedMunicipality, setSelectedMunicipality] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState([]);
-  const [selectedPopulation, setSelectedPopulation] = useState([]);
-  // const [selectedNeighborhood, setSelectedNeighborhood] = useState([]);
-
-  const [formData, setFormData] = useState({});
-
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log(formData, formData)
-    // Borrar los errores previos antes de la validación
-    // clearErrors();   
-    try {
-      // await validationSchema.validate(formData, { abortEarly: false });
-      const response = await addHousing(formData);
-      console.log(formData, formData)
-      setHousing([...housing, formData]); // Actualizar el estado de housing en el contexto
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
-  const { province, setProvince } = useContext(HousingContext);
-  const { municipality, setMunicipality } = useContext(HousingContext);
-  const { neighborhood, setNeighborhood } = useContext(HousingContext);
-  const { population, setPopulation } = useContext(HousingContext);
-
-
-  const handleChange = (event) => {
-    const { name, value, type, checked } = event.target;
-    const fieldValue = type === 'checkbox' ? checked : value;
-    setProvince(setSelectedProvince.value);
-    setMunicipality(setSelectedMunicipality.value);
-    //setNeighborhood(setSelectedNeighborhood.value);
-    setPopulation(setSelectedPopulation.value);
-
-
-    switch (name) {
-      case 'province':
-        setProvince(value);
-        setSelectedProvince(value);
-        break;
-      case 'municipality':
-        setMunicipality(value);
-        setSelectedMunicipality(value);
-        break;
-      case 'neighborhood':
-        setNeighborhood(value);
-        setSelectedNeighborhood(value);
-        break;
-      case 'population':
-        setPopulation(value);
-        setSelectedPopulation(value);
-        break;
-
-    }
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: fieldValue,
-    }));
-  };
-
-  const fetchMunicipalities = async () => {
-    try {
-      const { data } = await axios.get(`https://apiv1.geoapi.es/municipios?CPRO=${selectedProvince.CPRO}&type=JSON&key=eb280e481fbc76bc3be11e0e4b108687b76439c4d70beb2fbab3d7e56d772760&sandbox=0`);
-      setMunicipalities(data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchPopulations = async () => {
-    try {
-      const { data } = await axios.get(`https://apiv1.geoapi.es/poblaciones?CPRO=${selectedProvince.CPRO}&CMUM=${selectedMunicipality.CMUM}&type=JSON&key=eb280e481fbc76bc3be11e0e4b108687b76439c4d70beb2fbab3d7e56d772760&sandbox=0`);
-      setPopulations(data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchNeighborhoods = async () => {
-    try {
-      const encodedNENTS150 = selectedPopulation.NENTSI50.replace(/\s/g, '%20');
-      const { data } = await axios.get(`https://apiv1.geoapi.es/nucleos?CPRO=${selectedProvince.CPRO}&CMUM=${selectedMunicipality.CMUM}&NENTSI50=${encodedNENTS150}&type=JSON&key=eb280e481fbc76bc3be11e0e4b108687b76439c4d70beb2fbab3d7e56d772760&sandbox=0`);
-      setNeighborhoods(data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedProvince) {
-      fetchMunicipalities();
-    }
-  }, [selectedProvince]);
-
-  useEffect(() => {
-    if (selectedMunicipality) {
-      fetchPopulations();
-    }
-  }, [selectedMunicipality]);
-
-  useEffect(() => {
-    if (selectedPopulation) {
-      fetchNeighborhoods();
-    }
-  }, [selectedPopulation]);
-
-
-
-
-  ///////////////////////////////////////////////////////////////////////
-
-  return (
-    <div>
-
-      <FormControl style={{ width: '90%' }}>
-        <InputLabel id="province-label">Provincia*</InputLabel>
-        <Select
-          labelId="province-label"
-          name="province"
-          value={formData.province}
-          onChange={setProvince}
-        // error={!!errors.province}
-        // helpertext={errors.province}
-        >
-
-          {provinces.map((province) => (
-            <MenuItem key={province.CPRO} value={province}>
-              {province.PRO}
-            </MenuItem>
-          ))}
-
-        </Select>
-      </FormControl> 
-
-<FormControl style={{ width: '90%' }}>
-        <InputLabel id="municipality-label">Municipio*</InputLabel>
-        <Select
-          labelId="municipality-label"
-          name="municipality"
-          value={formData.municipality}
-          onChange={handleChange}
-        // error={!!errors.municipality}
-        // helpertext={errors.municipality}
-        >
-
-          {municipalities.map((municipality) => (
-            <MenuItem key={municipality.CMUM} value={municipality}>
-              {municipality.DMUN50}
-            </MenuItem>
-          ))}
-
-        </Select>
-      </FormControl> 
-      <FormControl style={{ width: '90%' }}>
-        <InputLabel id="province-label">Población*</InputLabel>
-        <Select
-          labelId="population-label"
-          name="population"
-          value={formData.population}
-          onChange={handleChange}
-        // error={!!errors.province}
-        // helpertext={errors.province}
-        >
-
-          {populations.map((population) => (
-            <MenuItem key={population.CUN} value={population}>
-              {population.NENTSI50}
-            </MenuItem>
-          ))}
-
-        </Select>
-      </FormControl> 
-
-
- <FormControl style={{ width: '90%' }}>
-        <InputLabel id="neighborhood-label">Barrio*</InputLabel>
-        <Select
-          labelId="neighborhood-label*"
-          name="neighborhood"
-          value={formData.neighborhood}
-          onChange={handleChange}
-        // error={!!errors.neighborhood} 
-        // helpertext={errors.neighborhood}
-        >
-
-          {neighborhoods.map((neighborhood) => (
-            <MenuItem key={neighborhood.CUN} value={neighborhood}>
-              {neighborhood.NNUCLE50}
-            </MenuItem>
-          ))}
-
-        </Select>
-      </FormControl> 
-
-    </div>
-
-  );
-}
-*/}
- 
-//Prueba chat gpt
 
 
 export function LocationFilter() {
@@ -339,7 +127,7 @@ export function LocationFilter() {
   }, [selectedPopulation]);
 
   return (
-    <div style={{ marginLeft:'1em'}}>
+    <div style={{ marginLeft: '1em' }}>
       <FormControl style={{ width: '90%' }}>
         <InputLabel id="province-label">Provincia*</InputLabel>
         <Select
@@ -434,8 +222,8 @@ export function PriceFilterMin() {
 
 
   return (
-    
-    <FormControl sx={{ m: 1, minWidth: 120, marginLeft:'1em' }} size="small">
+
+    <FormControl sx={{ m: 1, minWidth: 120, marginLeft: '1em' }} size="small">
       <InputLabel id="demo-select-small-label">Precio Minimo</InputLabel>
       <Select
         labelId="demo-select-small-label"
@@ -470,7 +258,7 @@ export function PriceFilterMax() {
 
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 120, marginLeft:'1em' }} size="small">
+    <FormControl sx={{ m: 1, minWidth: 120, marginLeft: '1em' }} size="small">
       <InputLabel id="demo-select-small-label">Precio Maximo</InputLabel>
       <Select
         labelId="demo-select-small-label"
@@ -513,7 +301,7 @@ export function SquareMeters() {
 
 
   return (
-    <Box sx={{ width: '90%', marginLeft:'1em' }}>
+    <Box sx={{ width: '90%', marginLeft: '1em' }}>
       <Slider
         aria-label="M²"
         value={filterValue}
@@ -540,7 +328,7 @@ export function RoomFilter() {
   };
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 150, marginLeft:'1em' }} size="small">
+    <FormControl sx={{ m: 1, minWidth: 150, marginLeft: '1em' }} size="small">
       <InputLabel id="demo-select-small-label">Habitaciones</InputLabel>
       <Select
         labelId="demo-select-small-label"
@@ -615,7 +403,7 @@ export function GaragesFilter() {
   };
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 90, marginLeft:'1em' }} size="small">
+    <FormControl sx={{ m: 1, minWidth: 90, marginLeft: '1em' }} size="small">
       <InputLabel id="demo-select-small-label">Garaje</InputLabel>
       <Select
         labelId="demo-select-small-label"
@@ -653,7 +441,7 @@ export function CheckboxesFilters() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <FormControl sx={{ marginLeft:'1em' }} component="fieldset" variant="standard">
+      <FormControl sx={{ marginLeft: '1em' }} component="fieldset" variant="standard">
         <FormGroup>
           <FormControlLabel
             control={
@@ -720,9 +508,18 @@ export function CheckboxesFilters() {
 
     </Box>
   );
-}
-
-
-
+};
 
 /// end checkbox filters
+
+// delete all filters
+
+export function DeleteFilters(){
+
+return(
+  <div>
+    <DeleteFilters/>
+  </div>
+)
+
+}
