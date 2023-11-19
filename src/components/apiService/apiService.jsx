@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const BackendUrl = "https://localhost:8000";
-const BackendUrl = "https://verde-backend-production.up.railway.app";
+const BackendUrl = "https://185.177.154.159:80";
+//const BackendUrl = "https://verde-backend-production.up.railway.app";
 
 //HOUSING
 
